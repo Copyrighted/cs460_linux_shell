@@ -38,20 +38,21 @@ main(int argc, char *argv[])
         char line[256];
         while (getline(line))
         {
+            
             //for each line in etc/pass file do
             //tokenize user account line
             tokenize(line);
             if (strcmp(tokens[0], name) == 0 && strcmp(tokens[1], password) == 0)
-            {
+            {   //username:password:gid:uid:fullname:HOMEDIR:program
                 
                 //change uid, gid to user's uid, gid  //chuid
-                chuid();
+                chuid(atoi(tokens[3]), atoi(tokens[2]));
                 //change cwd to users home DIR
-                chdir();
+                chdir(tokens[6]);
                 //close opened /etc/password file
-                close();
+                close(passwd_file);
                 //exec to program in user account
-                exec();
+                exec(tokens[7]);
             }
         }
     }
