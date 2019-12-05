@@ -1,6 +1,6 @@
 #include "ucode.c"
 int console;
-int parent() //P1's code
+int parent(int console) //P1's code
 {
     int pid, status;
     while(1){
@@ -26,7 +26,7 @@ main()
     printf("INIT: fork a login proc on console\n");
     console = fork();
     if (console)  // parent
-        parent();
+        parent(console);
     else //child: exec to login on tty0
         exec("login /dev/tty0");
 }

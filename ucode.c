@@ -69,6 +69,40 @@ int getline(char *s)
   return strlen(s);  // at least 1 because last char=\r or \n
 }
 
+int getc_fd(int fd)
+{
+   int c, n;
+   n = read(fd, &c, 1);  //is fucked up when it reads from file
+
+   /********************************************************************* 
+   getc from KBD will NOT get 0 byte but reading file (after redirect 0 
+   to file) may get 0 byte ==> MUST return 2-byte -1 to differentiate.
+   **********************************************************************/
+
+   if (n==0 || c==4 || c==0 ) return EOF;  
+                                
+   return (c&0x7F);
+}
+
+int getline_fd(char *s, int fd)
+{
+  int c;  
+  char *cp = s;
+  
+  c = getc_fd(fd);
+
+  while ((c != EOF) && (c != '\r') && (c != '\n')){
+    *cp++ = c;
+     c = getc(fd);
+  }
+  if (c==EOF) return 0;
+
+  *cp++ = c;         // a string with last char=\n or \r
+  *cp = 0;    
+  //printf("getline: %s", s); 
+  return strlen(s);  // at least 1 because last char=\r or \n
+}
+
 
 // gets() show each input char AND cook input line
 
