@@ -509,7 +509,7 @@ int pwd()
 
 
 // nk = eatpat(line, name);
-
+//tokenizes path
 int eatpath(char *line, char *name[ ])  
 {
   int i, n; char *cp;
