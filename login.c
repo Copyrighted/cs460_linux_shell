@@ -4,6 +4,7 @@ int in, out, err;
 char uname[128], password[128];
 char *tokens[7];
 
+//line is char pointer to whole file
 int tokenize(char *line, char *buf[], char delim)
 {
     char *cp = line;
@@ -11,20 +12,20 @@ int tokenize(char *line, char *buf[], char delim)
 
     while (*cp != 0) //while cp is not null
     {
-        while (*cp == ' ')
-            *cp++ = 0; //make null
+        while (*cp == ' ') //while whitespace 
+            *cp++ = 0; //assigns null then increments
         if (*cp != 0)
-            buf[len++] = cp;
-        while (*cp != delim && *cp != 0)
+            buf[len++] = cp;  //this is setting this to the first non null non whitespace char
+        while (*cp != delim && *cp != 0)  //keep incrementing while we see good ole chars
             cp++;
-        if (*cp != 0)
-            *cp = 0;
+        if (*cp != 0)  //this is making end of string NULL instead of \n
+            *cp = 0;  
         else
             break;
         cp++;
     }
     return len;
-}
+}   
 
 main(int argc, char *argv[])
 {
