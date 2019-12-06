@@ -42,7 +42,7 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
       continue;
 
     /* condition input string */
-    // printf("input=%s\n", buf);
+    //     printf("input=%s\n", buf);
     cp = buf;
     while (*cp == ' ') // skip leading blanks
       cp++;
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
     //printf("input=%s\n", buf);
 
     if (strcmp(cp, "") == 0) // if nothing or a bunch of spaces
-      continue;              // repeat the while loop
+      continue;              //    repeat the while loop
     //tbuf temporary buf
     //strcpy(tbuf, cp);
     strcpy(buf, cp);
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
 
     strcpy(tbuf, buf);
 
-    nk = tokenize_path(tbuf, name); //tokenizes
+    nk = eatpath(tbuf, name); //tokenizes
 
     if (strcmp(name[0], "cd") == 0)
     {
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
     { /* parent sh */
 
       printf("parent sh %d: wait for child %d to die\n", getpid(), pid);
-      pid = wait(&status);  
+      pid = wait(&status);
       printf("sh %d: child %d exit status = %x\n", getpid(), pid, status);
       continue;
     }

@@ -1,5 +1,7 @@
 #include "ucode.c"
 int console;
+int console_list[3];
+
 int parent(int console) //P1's code
 {
     int pid, status;
@@ -24,9 +26,14 @@ main()
     in = open("/dev/tty0", O_RDONLY);  // file descriptor 0
     out = open("/dev/tty0", O_WRONLY);  // for display to console
     printf("INIT: fork a login proc on console\n");
-    console = fork();
+    for (int i = 0; i < 3; i++){
+        console = fork();
+        console_list[i] = console;
+    }
     if (console)  // parent
-        parent(console);
+        for (int i = 0; i < 3; i++){
+            parent(console_list[i]);
+        }
     else //child: exec to login on tty0
         exec("login /dev/tty0");
 }
