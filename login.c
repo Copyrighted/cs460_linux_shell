@@ -5,6 +5,7 @@ char uname[128], password[128];
 char *tokens[7];
 
 //line is char pointer to whole file
+//used KC's CRTC0 for tokenizing stuff
 int tokenize(char *line, char *buf[], char delim)
 {
     char *cp = line;

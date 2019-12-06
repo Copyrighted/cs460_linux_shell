@@ -8,41 +8,36 @@ int nowait;
 char buf[1024];
 int color = 0x00C;
 
-void menu()
+char* get_cmd()
 {
-  print2f("~~~~~~~~~~~~~~~SCHEFLINUXX~~~~~~~~~~~~~~\n\r");
-  print2f("# ls   cd    pwd   cat   cp    mv   ps #\n\r");
-  print2f("# mkdir rmdir creat rm chmod more grep #\n\r");
-  print2f("# lpr (I/O and Pipe) :  >  >>  <  |    #\n\r");
-  print2f("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\r");
+  
+}
+
+void help()
+{
+  print2f("~~~~~~~~~~~~~~Assistance~~~~~~~~~~~~~~\n\r");
+  print2f(" ls   cd    pwd   cat   cp    mv   ps \n\r");
+  print2f(" mkdir rmdir creat rm chmod more grep \n\r");
+  print2f(" lpr (I/O and Pipe) :  >  >>  <  |    \n\r");
+  print2f("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\r");
 }
 
 int main(int argc, char *argv[])  //~~~~start here~~~~
 {
   int pid, status, i;
   char buf[256], tbuf[256], *cp, *cq;
-  /********************************
-  printf("argc=%d ",argc);
-  for (i=0; i<argc; i++)
-    printf("%s  ", argv[i]);
-  printf("\n\r");
-  *********************************/
-  //signal(2, 1); /* ignore signal#2: Control-C interrupts */ TODO:flag for deletion
 
   color = getpid() + 0x000A;  //adjusts color based on PID
-  //printf("sh %d running\n", getpid());
 
   while (1)
   {
     printf("sh %d# ", getpid());  //prints shell number
 
     gets(buf);  //gets command lines
-    /* printf("input=%s\n", buf); */
-    if (buf[0] == 0)
-      continue;
 
-    /* condition input string */
-    //     printf("input=%s\n", buf);
+    if (buf[0] == 0)  //if buf is empty repeat loop
+      continue;  
+
     cp = buf;
     while (*cp == ' ') // skip leading blanks
       cp++;
@@ -61,13 +56,10 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
 
     if (strcmp(cp, "") == 0) // if nothing or a bunch of spaces
       continue;              //    repeat the while loop
-    //tbuf temporary buf
-    //strcpy(tbuf, cp);
+
     strcpy(buf, cp);
-    //printf("input=%s\n", buf);
-
     strcpy(tbuf, buf);
-
+  
     nk = eatpath(tbuf, name); //tokenizes
 
     if (strcmp(name[0], "cd") == 0)
@@ -95,12 +87,6 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
       continue;
     }
 
-    if (strcmp(name[0], "?") == 0 || strcmp(name[0], "help") == 0)
-    {
-      menu();
-      continue;
-    }
-
     /* chname must be done by sh itself */
     if (strcmp(name[0], "chname") == 0)
     {
@@ -109,11 +95,15 @@ int main(int argc, char *argv[])  //~~~~start here~~~~
       continue;
     }
 
+    if (strcmp(name[0], "help") == 0)
+    {
+      help();
+      continue;
+    }
+
     if (strcmp(name[0], "logout") == 0)
     {
-      print2f("##########################################\n\r");
-      print2f("*************   Goodbye\007!   **************\n\r");
-      print2f("##########################################\n\r");
+      print2f("~GO AWAY\007!~\n\r");
       chdir("/");
       exit(0);
     }
@@ -174,11 +164,14 @@ char **tail;
   return 1; // head points at buf; return head
 }
 
+/*pipe has a read end and a write end
+
+**/
 int do_pipe(char *buf, int *rpd)
 {
-  int hasPipe, pid;
+  int hasPipe, pid;  //haspipe is so we know where pipe is
   char *tail;
-  int lpd[2];
+  int lpd[2]; 
 
   if (rpd)
   {
@@ -195,7 +188,7 @@ int do_pipe(char *buf, int *rpd)
   printf("\n");
   *****************/
 
-  hasPipe = scan(buf, &tail);
+  hasPipe = scan(buf, &tail);  //looks to see if theres pipe
   //printf("after scan: buf=%s  tail=%s\n", buf, tail);
 
   if (hasPipe)
@@ -206,7 +199,7 @@ int do_pipe(char *buf, int *rpd)
       exit(1);
     }
     // printf("after pipe(): lpd[0|1]=[%d %d]\n", lpd[0], lpd[1]);
-    pid = fork();
+    pid = fork();  //parent id and child id, child is left  half of first pipe and parents right side of pipe
 
     if (pid < 0)
     {
@@ -217,8 +210,8 @@ int do_pipe(char *buf, int *rpd)
     if (pid)
     { // parent as reader on LEFT side pipe
       close(lpd[1]);
-      close(0);
-      dup(lpd[0]);
+      close(0);  // close the read
+      dup(lpd[0]);  //dup is duplication of file descriptor, read from the pipe
       close(lpd[0]);
       printf("proc %d exec %s\n", getpid(), tail);
       command(tail);
