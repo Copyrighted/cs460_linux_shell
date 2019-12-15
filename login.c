@@ -30,7 +30,7 @@ int tokenize(char *line, char *buf[], char delim)
 
 main(int argc, char *argv[])
 {
-    char *lines[128], *acc_info[128], file_lines[1024];
+    char *lines[256], *account_info[256], file_lines[1024];
 
     close(0); //close stdin why?!
     close(1); //close stdout  why?!?!
@@ -59,21 +59,19 @@ main(int argc, char *argv[])
 
         for (int i = 0; i < len; i++)   
         {
-            tokenize(lines[i], acc_info, ':');
+            tokenize(lines[i], account_info, ':');
             
-            if (strcmp(uname, acc_info[0]) == 0 && strcmp(password, acc_info[1]) == 0)
+            if (strcmp(uname, account_info[0]) == 0 && strcmp(password, account_info[1]) == 0)
             {
-                // change uid, gid to user's uid, gid;
-                chuid(atoi(acc_info[2]), atoi(acc_info[3]));
+                chuid(atoi(account_info[2]), atoi(account_info[3])); // change uid, gid to user's uid, gid;
 
-                // change cwd to users home DIR
-                chdir(acc_info[5]);
+                
+                chdir(account_info[5]);  //change cwd to users home DIR
 
-                // close opened /etc/passwd file
-                close(passwd_fd);
+                close(passwd_fd);  // close opened /etc/passwd file
 
-                // exec to program in user account // exec
-                exec(acc_info[6]);
+                exec(account_info[6]);  // exec to program in user account // exec
+
 
                 break;
             }

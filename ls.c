@@ -14,14 +14,10 @@ int ls_file(char *fname, char *name)  //lists a single file
   struct stat fstat, *sp;
   int r, i, in;
   char ftime[64];
-  char temName[100];
-  sp = &fstat;
-
-  //printf("ls_file \n\r");
-  
+  char tempName[100];
+  sp = &fstat;  
 
   r= stat(fname, &fstat);
-  //printf(" this is r : %d\n\r",r);
 
   if (r<0)
   {
@@ -56,29 +52,26 @@ int ls_file(char *fname, char *name)  //lists a single file
     }
   }
 
-  printf("    %d ",sp->st_nlink);
-  printf("  %d ",sp->st_uid);
-  printf("  %d ",sp->st_gid);
+  printf(" %d ",sp->st_nlink);
+  printf(" %d ",sp->st_uid);
+  printf(" %d ",sp->st_gid);
+  printf(" %d ",sp->st_size);
 
-  //printf(" %d ",sp->st_size);
   i = 0;
   while(name[i]!='\0')
   {
     i++;
   }
-  //printi(i);
-  strcpy(temName,name);
-  temName[i]=0;
-  prints(temName);
-  printf("\n\r");
   
-  //strcpy(ftime, ctime(&sp->st_ctime));
-
+  strcpy(tempName,name);
+  tempName[i]=0;
+  prints(tempName);
+  printf("\n\r");
 }
 
 int ls_dir(char *dname)
 {
-  printf("ls_dir\n\r");
+  printf("SCHEFF~LS~\n\r");
   char name[256], tempName[256];  // EXT2 filename: 1-255 chars
   char buf[1024];  
   struct dirent *ep;
