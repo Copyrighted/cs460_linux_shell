@@ -1,3 +1,7 @@
 # CS460 Term Project Linux Shell
 
-The final project for my Computer Science 460 class is to have a fully working shell that can run commands in User mode and execute them at the kernel level.
+
+#Description
+
+The final project for my Operating Systems class. A fully working shell that can run commands in User mode and execute them at the kernel level.
+Runs on ARM architecture simulated on QEMU.
